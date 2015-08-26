@@ -59,6 +59,9 @@ class Note
 		static int s_prevCantusOctave;
 		static int s_cantusDirection;
 		
+		static int s_prevCounterpointValue;
+		static int s_prevCounterpointOctave;
+		
 
 		
 		
@@ -83,7 +86,7 @@ class Note
 			m_Dvalid6=true;
 			m_Dvalid7=true;
 			
-			for(int iii =1; iii<=13; iii++)
+			for(int iii =0; iii<13; iii++)
 			{
 				m_validIntervalList[iii] = iii;
 			}
@@ -92,7 +95,7 @@ class Note
 			
 		
 			m_timeValue = timeValue;
-			m_unison = noteNumber;
+			m_unison = noteNumber; // 1,2,3,4,5,6,7,8
 			m_second = (m_unison +1)%7;
 			m_third = (noteNumber+2)%7;
 			m_fourth = (noteNumber +3)%7;
@@ -134,6 +137,9 @@ int Note::s_prevCantusValue= 1;
 int Note::s_prevCantusOctave =1;
 int Note::s_cantusDirection = 0;
 
+int Note::s_prevCounterpointValue =1;
+int Note::s_prevCounterpointOctave = 1;
+
 
 
 
@@ -144,7 +150,7 @@ void Note::listCheck()
 	{
 		for(int iii =0; iii<13; iii++)
 		{
-			if(m_validIntervalList[iii] == 1)
+			if(m_validIntervalList[iii] == 0)
 			{
 				moveToEnd13( iii, m_validIntervalList);
 				m_remainingIntervalsIndex -= 1;
@@ -157,7 +163,7 @@ void Note::listCheck()
 	{
 		for(int iii =0; iii<13; iii++)
 		{
-			if(m_validIntervalList[iii] == 2)
+			if(m_validIntervalList[iii] == 1)
 			{
 				moveToEnd13( iii, m_validIntervalList);
 				m_remainingIntervalsIndex -= 1;
@@ -170,7 +176,7 @@ void Note::listCheck()
 	{
 		for(int iii =0; iii<13; iii++)
 		{
-			if(m_validIntervalList[iii] == 3)
+			if(m_validIntervalList[iii] == 2)
 			{
 				moveToEnd13( iii, m_validIntervalList);
 				m_remainingIntervalsIndex -= 1;
@@ -183,7 +189,7 @@ void Note::listCheck()
 	{
 		for(int iii =0; iii<13; iii++)
 		{
-			if(m_validIntervalList[iii] == 4)
+			if(m_validIntervalList[iii] == 3)
 			{
 				moveToEnd13( iii, m_validIntervalList);
 				m_remainingIntervalsIndex -= 1;
@@ -196,7 +202,7 @@ void Note::listCheck()
 	{
 		for(int iii =0; iii<13; iii++)
 		{
-			if(m_validIntervalList[iii] == 5)
+			if(m_validIntervalList[iii] == 4)
 			{
 				moveToEnd13( iii, m_validIntervalList);
 				m_remainingIntervalsIndex -= 1;
@@ -209,7 +215,7 @@ void Note::listCheck()
 	{
 		for(int iii =0; iii<13; iii++)
 		{
-			if(m_validIntervalList[iii] == 6)
+			if(m_validIntervalList[iii] == 5)
 			{
 				moveToEnd13( iii, m_validIntervalList);
 				m_remainingIntervalsIndex -= 1;
@@ -222,7 +228,7 @@ void Note::listCheck()
 	{
 		for(int iii =0; iii<13; iii++)
 		{
-			if(m_validIntervalList[iii] == 7)
+			if(m_validIntervalList[iii] == 6)
 			{
 				moveToEnd13( iii, m_validIntervalList);
 				m_remainingIntervalsIndex -= 1;
@@ -235,7 +241,7 @@ void Note::listCheck()
 	{
 		for(int iii =0; iii<13; iii++)
 		{
-			if(m_validIntervalList[iii] == 8)
+			if(m_validIntervalList[iii] == 7)
 			{
 				moveToEnd13( iii, m_validIntervalList);
 				m_remainingIntervalsIndex -= 1;
@@ -248,7 +254,7 @@ void Note::listCheck()
 	{
 		for(int iii =0; iii<13; iii++)
 		{
-			if(m_validIntervalList[iii] == 9)
+			if(m_validIntervalList[iii] == 8)
 			{
 				moveToEnd13( iii, m_validIntervalList);
 				m_remainingIntervalsIndex -= 1;
@@ -261,7 +267,7 @@ void Note::listCheck()
 	{
 		for(int iii =0; iii<13; iii++)
 		{
-			if(m_validIntervalList[iii] == 10)
+			if(m_validIntervalList[iii] == 9)
 			{
 				moveToEnd13( iii, m_validIntervalList);
 				m_remainingIntervalsIndex -= 1;
@@ -274,7 +280,7 @@ void Note::listCheck()
 	{
 		for(int iii =0; iii<13; iii++)
 		{
-			if(m_validIntervalList[iii] == 11)
+			if(m_validIntervalList[iii] == 10)
 			{
 				moveToEnd13( iii, m_validIntervalList);
 				m_remainingIntervalsIndex -= 1;
@@ -287,7 +293,7 @@ void Note::listCheck()
 	{
 		for(int iii =0; iii<13; iii++)
 		{
-			if(m_validIntervalList[iii] == 12)
+			if(m_validIntervalList[iii] == 11)
 			{
 				moveToEnd13( iii, m_validIntervalList);
 				m_remainingIntervalsIndex -= 1;
@@ -300,7 +306,7 @@ void Note::listCheck()
 	{
 		for(int iii =0; iii<13; iii++)
 		{
-			if(m_validIntervalList[iii] == 13)
+			if(m_validIntervalList[iii] == 12)
 			{
 				moveToEnd13( iii, m_validIntervalList);
 				m_remainingIntervalsIndex -= 1;

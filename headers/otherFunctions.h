@@ -154,6 +154,43 @@ ABCFileInfo::Key getKey(std::string strInput)
 			return ABCFileInfo::UNKNOWN_KEY;
 	}
 }
+/////////////////////////////////////////////////////
+// isConsonantInterval?
+//////////////////////////////////////////////////
+bool isConsonantInterval( int value)
+{
+	switch (value)
+	{
+		case 1:
+			return true;
+			break;
+		case 2:
+			return false;
+			break;
+		case 3:
+			return true;
+			break;
+		case 4:
+			return true;
+			break;
+		case 5:
+			return true;
+			break;
+		case 6:
+			return true;
+			break;
+		case 7:
+			return false;
+			break;
+		default:
+			return false;
+			break;
+		
+	}
+
+}
+
+
 
 /////////////////////////////////////////
 // octave and noteValue to character
@@ -161,15 +198,16 @@ ABCFileInfo::Key getKey(std::string strInput)
 
 char octAndValueToChar( int octave, int value)
 {
+
 	if ( value >=8)
 	{
-		octave -=1;
-		value = value%7;
+		octave +=1;
+		value = value%7; // IS THIS RIGHT?
 		
-
 	}
-	if(value ==0){ value =7;}
-	std::cout<<value; //Getting -1 input
+	if( octave >2){octave =1;} // REMEMBER TO REMOVE THIS LINE
+	if(value ==0){ value =7;} // IS THIS RIGHT?
+	//std::cout<<value; //Getting -1 input
 	if(octave == 1)
 	{
 		switch (value)
@@ -196,7 +234,7 @@ char octAndValueToChar( int octave, int value)
 				return 'B';
 				break;
 			default:
-				std::cout<<"Error";
+				std::cout<<"Error,"<<"("<<__LINE__<<")\n";
 				return '#';
 			
 		}
@@ -228,14 +266,14 @@ char octAndValueToChar( int octave, int value)
 				return 'b';
 				break;
 			default:
-				std::cout<<"Error";
+				std::cout<<"Error,"<<"("<<__LINE__<<")\n";
 				return '#';
 			
 		}
 	}
 	else
 	{
-		std::cout<<"ERROR INVALID OCTAVE (octave!= 1,2)";
+		std::cout<<"ERROR INVALID OCTAVE: "<< octave<< " \t("<<__LINE__<<")\n";
 		return '#';
 	}
 	
@@ -289,7 +327,7 @@ Note charToNote(char ichar)
 			currentNote = Note(6,2);
 			break;
 		case 'b':
-			currentNote =  Note(8,2);
+			currentNote =  Note(7,2);
 			break;
 		case 'c':
 			currentNote =  Note(1,2);
@@ -387,7 +425,7 @@ char noteToChar(Note inote, int interval=1, int direction =1)
 
 	
 	
-	
+	//std::cout<<"\t"<<interval<<"\t";
 	switch (interval)
 	{
 		case 1:
@@ -424,7 +462,127 @@ char noteToChar(Note inote, int interval=1, int direction =1)
 // GET NOTE
 //////////////////////////////////////////////
 
-char getNote( char ichar)
+char getNote( char cantusChar)
+{
+	Note cantusNote = charToNote(cantusChar);
+	// consonant intervals: 1, 3, 4, 5, 6, 8 up
+	// 3, 5, 6, 8 down
+	int prevCptValue = Note::s_prevCounterpointValue;
+	int prevCptOctave = Note::s_prevCounterpointOctave;
+
+	
+
+	
+	assert(prevCptValue <8 && prevCptValue >0);
+	
+	
+	
+	Note tempNote(1,1);
+	
+	for( int iii = 1; iii+prevCptValue <=6; iii++)
+	{
+		
+		int tempValue = prevCptValue + iii;
+		tempValue = tempValue - cantusNote.m_unison;
+		if (tempValue<0){ tempValue = - tempValue;}
+		tempValue = tempValue%7;
+		if (tempValue == 0){ tempValue = 7;}
+		switch (iii)
+		{
+			case 1: // switch takes care of interval from previous cpt value
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid2 = false;}
+				break;
+			case 2:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid3 = false;}
+				break;
+			case 3:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid4 = false;}
+				break;
+			case 4:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid5 = false;}
+				break;
+			case 5:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid6 = false;}
+				break;
+			case 6:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid7 = false;}
+				break;
+			default:
+				
+				break;
+		}
+
+	}
+	for( int iii = 1; prevCptValue -iii >= 0; iii++)
+	{
+		int tempValue = prevCptValue - iii;
+		tempValue = tempValue - cantusNote.m_unison;
+		if (tempValue<0){ tempValue = - tempValue;}
+		tempValue = tempValue%7;
+		if (tempValue == 0){ tempValue = 7;}
+		switch (iii)
+		{
+			case 1: // switch takes care of interval from previous cpt value
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid2 = false;}
+				break;
+			case 2:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid3 = false;}
+				break;
+			case 3:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid4 = false;}
+				break;
+			case 4:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid5 = false;}
+				break;
+			case 5:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid6 = false;}
+				break;
+			case 6:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid7 = false;}
+				break;
+			default:
+				
+				break;
+		}
+	}
+	
+	tempNote.listCheck();
+	int randomNumber = rand() & tempNote.m_remainingIntervalsIndex;
+	int chosenInterval = tempNote.m_validIntervalList[ randomNumber ];
+	
+	int ovalue = (prevCptValue + chosenInterval);
+		if( prevCptOctave >2){prevCptOctave =1;} // REMEMBER TO REMOVE
+
+	char ochar = octAndValueToChar( prevCptOctave , ovalue);
+	
+	if(ovalue >= 8) 
+	{
+		ovalue = ovalue%7;
+		prevCptOctave += 1;
+	}
+	Note::s_prevCounterpointValue = ovalue;
+	
+	Note::s_prevCounterpointOctave =  prevCptOctave;
+	
+	
+	if( isNoteChar(ochar) )
+	{
+		
+		return ochar;
+	}
+	else
+		{return 37;}
+}
+
+
+
+
+
+
+
+
+
+/*char getNote( char ichar)
 {
 
 	Note inote = charToNote(ichar);
@@ -433,6 +591,7 @@ char getNote( char ichar)
 	int stepwiseMotion = rand() % 5; // 0,1,2,3,4
 	if(stepwiseMotion <4)
 	{
+		//inote.m_valid1 = false;
 		inote.m_valid3 = false;
 		inote.m_valid4 = false;
 		inote.m_valid5 = false;
@@ -446,11 +605,12 @@ char getNote( char ichar)
 		inote.m_Dvalid7 = false;
 	}
 	
+	//std::cout<<Note::s_cantusDirection<<"\t";
 	int useContraryMotion = rand() % 5; // 0,1,2,3,4
 	int counterpointDirection =0;
-	if (useContraryMotion <4)
+	if (useContraryMotion <4) 
 	{
-		counterpointDirection = - Note::s_cantusDirection;
+		counterpointDirection =  -Note::s_cantusDirection;
 	}
 	else
 	{
@@ -475,9 +635,20 @@ char getNote( char ichar)
 		inote.m_valid7 = false;
 		
 	}
+	//std::cout<< counterpointDirection<< "\n";
 	inote.listCheck();
+	//std::cout<<"\t"<<inote.m_remainingIntervalsIndex<<"\t";
+	
+	std::cout<<std::endl;
+	for(int iii=0; iii<13; iii++)
+	{
+		std::cout<<inote.m_validIntervalList[iii]<<"\n";
+	}
+	std::cout<<std::endl;
+	
 	
 	int randomNumber = rand() % inote.m_remainingIntervalsIndex;
+	randomNumber+=1;
 	//std::cout << randomNumber;
 	char ochar = noteToChar(inote, randomNumber, counterpointDirection);
 	
@@ -501,16 +672,17 @@ char getNote( char ichar)
 			ochar = noteToChar(inote, 1);
 			break;
 		
-	}*/
+	}
 	
 	
 	if( isNoteChar(ochar) )
 	{
+		
 		return ochar;
 	}
 	else
 		{return 37;}
-}
+}*/
 
 
 
