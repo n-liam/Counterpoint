@@ -32,5 +32,31 @@ void moveToEnd13(int index, int array13[13])
 }
 
 
+/////////////////////////////////////
+// swaps elements in a list
+///////////////////////////////////////
+
+void swapElements( int length, int array[], int index1, int index2)
+{
+	assert( index1<length && index1>=0); 
+	assert(index2<length && index2>=0);
+	
+	int temp1= array[index1];
+	int temp2 = array[index2];
+	
+	array[index1]= temp2;
+	array[index2] = temp1;
+
+}
+
+void moveToEnd(int length, int array[], int index)
+{
+	assert(index<length && index>=0);
+	
+	for( int iii = length-1; iii>index; iii-=1)
+	{
+		swapElements(length, array, iii, index);
+	}
+}
 
 #endif

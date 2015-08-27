@@ -22,9 +22,6 @@ int main()
     ofstream outf("counterpoint.abc");
 	ifstream inf("cantusFirmus.abc");
  
-
-
-	
  
     if (!outf)
     {

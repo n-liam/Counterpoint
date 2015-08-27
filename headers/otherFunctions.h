@@ -469,102 +469,46 @@ char getNote( char cantusChar)
 	// 3, 5, 6, 8 down
 	int prevCptValue = Note::s_prevCounterpointValue;
 	int prevCptOctave = Note::s_prevCounterpointOctave;
-
-	
-
 	
 	assert(prevCptValue <8 && prevCptValue >0);
 	
+
+	int listOfValidNotes[7] = {1,2,3,4,5,6,7};
+	int listIndex = 6;
 	
+	int listOfBadIntervals[] = {2, 4, 7};
 	
-	Note tempNote(1,1);
+
 	
-	for( int iii = 1; iii+prevCptValue <=6; iii++)
+	for(int iii=0; iii<3; iii++)
 	{
-		
-		int tempValue = prevCptValue + iii;
-		tempValue = tempValue - cantusNote.m_unison;
-		if (tempValue<0){ tempValue = - tempValue;}
-		tempValue = tempValue%7;
-		if (tempValue == 0){ tempValue = 7;}
-		switch (iii)
+		int badInterval = listOfBadIntervals[iii];
+		int badValue = (cantusNote.m_unison + badInterval-1)%7;
+		if(badValue == 0){badValue = 7;}
+		for(int jjj=0; jjj<= listIndex; jjj++)
 		{
-			case 1: // switch takes care of interval from previous cpt value
-				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid2 = false;}
-				break;
-			case 2:
-				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid3 = false;}
-				break;
-			case 3:
-				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid4 = false;}
-				break;
-			case 4:
-				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid5 = false;}
-				break;
-			case 5:
-				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid6 = false;}
-				break;
-			case 6:
-				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid7 = false;}
-				break;
-			default:
-				
-				break;
+			if(listOfValidNotes[jjj]==badValue)
+			{
+				moveToEnd(7, listOfValidNotes, jjj);
+				listIndex -= 1;
+			}
 		}
 
 	}
-	for( int iii = 1; prevCptValue -iii >= 0; iii++)
+	if(cantusNote.m_unison ==7)
 	{
-		int tempValue = prevCptValue - iii;
-		tempValue = tempValue - cantusNote.m_unison;
-		if (tempValue<0){ tempValue = - tempValue;}
-		tempValue = tempValue%7;
-		if (tempValue == 0){ tempValue = 7;}
-		switch (iii)
-		{
-			case 1: // switch takes care of interval from previous cpt value
-				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid2 = false;}
-				break;
-			case 2:
-				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid3 = false;}
-				break;
-			case 3:
-				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid4 = false;}
-				break;
-			case 4:
-				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid5 = false;}
-				break;
-			case 5:
-				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid6 = false;}
-				break;
-			case 6:
-				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid7 = false;}
-				break;
-			default:
-				
-				break;
-		}
+		listOfValidNotes[0]=2; 
+		listOfValidNotes[1]=7;
+		listIndex=1;
 	}
+	int randomNumber = rand() % (listIndex+1); //0, 1, ..., listIndex
+	int noteValue = listOfValidNotes[ randomNumber];
 	
-	tempNote.listCheck();
-	int randomNumber = rand() & tempNote.m_remainingIntervalsIndex;
-	int chosenInterval = tempNote.m_validIntervalList[ randomNumber ];
 	
-	int ovalue = (prevCptValue + chosenInterval);
-		if( prevCptOctave >2){prevCptOctave =1;} // REMEMBER TO REMOVE
+	
+	
 
-	char ochar = octAndValueToChar( prevCptOctave , ovalue);
-	
-	if(ovalue >= 8) 
-	{
-		ovalue = ovalue%7;
-		prevCptOctave += 1;
-	}
-	Note::s_prevCounterpointValue = ovalue;
-	
-	Note::s_prevCounterpointOctave =  prevCptOctave;
-	
-	
+	char ochar = octAndValueToChar(1, noteValue);
 	if( isNoteChar(ochar) )
 	{
 		
@@ -682,7 +626,81 @@ char getNote( char cantusChar)
 	}
 	else
 		{return 37;}
-}*/
+}
+
+
+//////////////////////////////////
+
+Note tempNote(1,1);
+	
+	for( int iii = 1; iii+prevCptValue <=6; iii++)
+	{
+		
+		int tempValue = prevCptValue + iii;
+		tempValue = tempValue - cantusNote.m_unison;
+		if (tempValue<0){ tempValue = - tempValue;}
+		tempValue = tempValue%7;
+		if (tempValue == 0){ tempValue = 7;}
+		switch (iii)
+		{
+			case 1: // switch takes care of interval from previous cpt value
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid2 = false;}
+				break;
+			case 2:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid3 = false;}
+				break;
+			case 3:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid4 = false;}
+				break;
+			case 4:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid5 = false;}
+				break;
+			case 5:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid6 = false;}
+				break;
+			case 6:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_valid7 = false;}
+				break;
+			default:
+				
+				break;
+		}
+
+	}
+	for( int iii = 1; prevCptValue -iii >= 0; iii++)
+	{
+		int tempValue = prevCptValue - iii;
+		tempValue = tempValue - cantusNote.m_unison;
+		if (tempValue<0){ tempValue = - tempValue;}
+		tempValue = tempValue%7;
+		if (tempValue == 0){ tempValue = 7;}
+		switch (iii)
+		{
+			case 1: // switch takes care of interval from previous cpt value
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid2 = false;}
+				break;
+			case 2:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid3 = false;}
+				break;
+			case 3:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid4 = false;}
+				break;
+			case 4:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid5 = false;}
+				break;
+			case 5:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid6 = false;}
+				break;
+			case 6:
+				if( ! isConsonantInterval(tempValue ) ) { tempNote.m_Dvalid7 = false;}
+				break;
+			default:
+				
+				break;
+		}
+	}
+	
+*/
 
 
 
